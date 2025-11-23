@@ -1,5 +1,5 @@
 {
-  "name": "my-turborepo",
+  "name": "webzenith-rbas",
   "private": true,
   "scripts": {
     "build": "turbo run build",
