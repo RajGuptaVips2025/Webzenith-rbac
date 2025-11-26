@@ -105,8 +105,16 @@ export function RBACProvider({ children }: { children: React.ReactNode }) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updates),
             });
-            if (!res.ok) throw new Error("Failed to update role");
-            return res.json();
+
+            const json = await res.json().catch(() => ({}));
+
+            if (!res.ok) {
+                // prefer server-sent error message
+                const msg = (json && (json.error || json.message)) || `Failed to update role (${res.status})`;
+                throw new Error(msg);
+            }
+
+            return json;
         },
         onSuccess: () => qc.invalidateQueries({ queryKey: ["rbac", "roles"] }),
     });

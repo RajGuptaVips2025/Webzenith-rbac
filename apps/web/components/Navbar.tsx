@@ -24,7 +24,7 @@ export default function Navbar() {
     <nav className="w-full bg-white border-b shadow-sm px-6 py-3 flex justify-between items-center sticky top-0 z-50">
 
       {/* Logo */}
-      <Link href="/dashboard" className="text-xl font-semibold tracking-tight text-blue-600">
+      <Link href="/" className="text-xl font-semibold tracking-tight text-blue-600">
         Webzenith Solutions
       </Link>
 

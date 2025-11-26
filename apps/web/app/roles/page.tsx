@@ -58,33 +58,67 @@ export default function RolesPage() {
     setEditingRole(null);
   }
 
-  function handleSave() {
+  // function handleSave() {
+  //   if (!form.name.trim()) {
+  //     alert('Role name is required');
+  //     return;
+  //   }
+
+  //   if (editingRole) {
+  //     updateRole(editingRole.id, {
+  //       name: form.name.trim(),
+  //       description: form.description,
+  //       color: form.color,
+  //       enabled: form.enabled,
+  //     });
+  //   } else {
+  //     const newRole: Role = {
+  //       id: `role_${Date.now()}`,
+  //       name: form.name.trim(),
+  //       description: form.description,
+  //       color: form.color,
+  //       enabled: form.enabled ?? true,
+  //       permissions: [],
+  //       createdAt: new Date().toISOString(),
+  //     };
+  //     addRole(newRole);
+  //   }
+
+  //   closeModal();
+  // }
+
+  async function handleSave() {
     if (!form.name.trim()) {
       alert('Role name is required');
       return;
     }
 
-    if (editingRole) {
-      updateRole(editingRole.id, {
-        name: form.name.trim(),
-        description: form.description,
-        color: form.color,
-        enabled: form.enabled,
-      });
-    } else {
-      const newRole: Role = {
-        id: `role_${Date.now()}`,
-        name: form.name.trim(),
-        description: form.description,
-        color: form.color,
-        enabled: form.enabled ?? true,
-        permissions: [],
-        createdAt: new Date().toISOString(),
-      };
-      addRole(newRole);
-    }
+    try {
+      if (editingRole) {
+        await updateRole(editingRole.id, {
+          name: form.name.trim(),
+          description: form.description,
+          color: form.color,
+          enabled: form.enabled,
+        });
+      } else {
+        const newRole: Role = {
+          id: `role_${Date.now()}`,
+          name: form.name.trim(),
+          description: form.description,
+          color: form.color,
+          enabled: form.enabled ?? true,
+          permissions: [],
+          createdAt: new Date().toISOString(),
+        };
+        await addRole(newRole);
+      }
 
-    closeModal();
+      closeModal();
+    } catch (err: any) {
+      console.error("Save role failed:", err);
+      alert("Failed to save role: " + (err?.message ?? String(err)));
+    }
   }
 
   function handleToggleEnabled(role: Role) {
