@@ -1,9 +1,9 @@
 [build]
   base = "."
-  command = "pnpm install --frozen-lockfile && pnpm build"
+  command = "pnpm build"
   publish = ".next"
 
 [build.environment]
   NODE_VERSION = "18"
-  NPM_FLAGS = "--version"        # disables npm install
-  PNPM_VERSION = "9.0.0"         # choose your pnpm version
+  PNPM_VERSION = "9.0.0"
+  NPM_FLAGS = "--version"
