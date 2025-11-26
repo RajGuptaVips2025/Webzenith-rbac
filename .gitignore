@@ -1,38 +1,160 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# Dependencies
-node_modules
-.pnp
-.pnp.js
-
-# Local env files
+# --------------------------
+# 🔒 ENV / SECRETS (MOST IMPORTANT)
+# --------------------------
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*                      # Ignore all env variations: .env.dev, .env.prod, etc.
+!.env.example               # Keep example file if you create it
+supabase/.env              # Supabase local secrets
+supabase/.temp             # Supabase temp artifacts
+supabase/config.toml       # Contains anon/service keys — DO NOT PUSH
 
-# Testing
-coverage
-
-# Turbo
-.turbo
-
-# Vercel
-.vercel
-
-# Build Outputs
-.next/
-out/
-build
-dist
-
-
-# Debug
+# --------------------------
+# 📦 Node & Package Managers
+# --------------------------
+node_modules/
+.pnp/
+.pnp.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 
-# Misc
+# --------------------------
+# ⚙️ Next.js Build Output
+# --------------------------
+.next/
+out/
+dist/
+build/
+
+# --------------------------
+# ⚡ Turbopack / Turbo repo
+# --------------------------
+.turbo/
+turbo.json
+turbo.log
+
+# --------------------------
+# ☁️ Vercel
+# --------------------------
+.vercel/
+
+# --------------------------
+# 🧪 Testing
+# --------------------------
+coverage/
+jest-output/
+test-results/
+
+# --------------------------
+# 📸 Local uploads / Storage
+# (Prevents accidental uploads of user content)
+# --------------------------
+public/uploads/
+public/temp/
+tmp/
+temp/
+
+# --------------------------
+# 📁 Logs
+# --------------------------
+*.log
+logs/
+*.pid
+*.seed
+*.log.*
+
+# --------------------------
+# 🧹 IDE / Editor folders
+# --------------------------
+.vscode/
+.vscode/*
+!.vscode/extensions.json     # Optional: allow recommended extensions
+.idea/
+*.swp
+*.swo
+
+# --------------------------
+# 🍎 macOS / Windows junk files
+# --------------------------
 .DS_Store
+Thumbs.db
 *.pem
+*.key
+
+# --------------------------
+# 🐳 Docker
+# --------------------------
+docker-compose.override.yml
+docker-data/
+*.bak
+
+# --------------------------
+# 🗄 Prisma / Database
+# --------------------------
+prisma/*.db
+prisma/*.sqlite
+*.sqlite
+*.db
+*.sql
+
+# --------------------------
+# 🏗 Misc
+# --------------------------
+*.local
+*.cache
+.cache/
+.next/cache/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# # Dependencies
+# node_modules
+# .pnp
+# .pnp.js
+
+# # Local env files
+# .env
+# .env.local
+# .env.development.local
+# .env.test.local
+# .env.production.local
+
+# # Testing
+# coverage
+
+# # Turbo
+# .turbo
+
+# # Vercel
+# .vercel
+
+# # Build Outputs
+# .next/
+# out/
+# build
+# dist
+
+
+# # Debug
+# npm-debug.log*
+# yarn-debug.log*
+# yarn-error.log*
+
+# # Misc
+# .DS_Store
+# *.pem
