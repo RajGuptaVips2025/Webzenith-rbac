@@ -1,10 +1,8 @@
-// apps/web/app/api/roles/with-perms/route.ts
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "../../../../lib/supabase.server";
 
 export async function GET() {
   try {
-    // get all roles
     const { data: rawRoles, error: rolesErr } = await supabaseAdmin
       .from("roles")
       .select("id, name, description, enabled, color, created_at");
@@ -13,7 +11,6 @@ export async function GET() {
       return NextResponse.json({ error: rolesErr.message }, { status: 500 });
     }
 
-    // FORCE TS: rawRoles is always an array, never null
     const roles = (rawRoles ?? []) as {
       id: string;
       name: string;
@@ -23,7 +20,6 @@ export async function GET() {
       created_at: string;
     }[];
 
-    // get role_permissions
     const { data: rawRpRows, error: rpErr } = await supabaseAdmin
       .from("role_permissions")
       .select("role_id, permission");
@@ -32,13 +28,11 @@ export async function GET() {
       return NextResponse.json({ error: rpErr.message }, { status: 500 });
     }
 
-    // FORCE TS: always an array
     const rpRows = (rawRpRows ?? []) as {
       role_id: string;
       permission: string;
     }[];
 
-    // group perms by role
     const permsByRole: Record<string, string[]> = {};
 
     rpRows.forEach((row) => {
@@ -49,7 +43,6 @@ export async function GET() {
       permsByRole[roleId].push(perm);
     });
 
-    // attach permissions
     const rolesWithPerms = roles.map((role) => ({
       ...role,
       createdAt: role.created_at,

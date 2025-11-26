@@ -1,5 +1,3 @@
-// apps/web/app/layout.tsx
-
 import "./globals.css";
 import Providers from '../components/Providers'
 import Navbar from "../components/Navbar";

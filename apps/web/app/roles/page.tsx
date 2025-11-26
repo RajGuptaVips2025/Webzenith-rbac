@@ -58,35 +58,6 @@ export default function RolesPage() {
     setEditingRole(null);
   }
 
-  // function handleSave() {
-  //   if (!form.name.trim()) {
-  //     alert('Role name is required');
-  //     return;
-  //   }
-
-  //   if (editingRole) {
-  //     updateRole(editingRole.id, {
-  //       name: form.name.trim(),
-  //       description: form.description,
-  //       color: form.color,
-  //       enabled: form.enabled,
-  //     });
-  //   } else {
-  //     const newRole: Role = {
-  //       id: `role_${Date.now()}`,
-  //       name: form.name.trim(),
-  //       description: form.description,
-  //       color: form.color,
-  //       enabled: form.enabled ?? true,
-  //       permissions: [],
-  //       createdAt: new Date().toISOString(),
-  //     };
-  //     addRole(newRole);
-  //   }
-
-  //   closeModal();
-  // }
-
   async function handleSave() {
     if (!form.name.trim()) {
       alert('Role name is required');
@@ -145,7 +116,6 @@ export default function RolesPage() {
               className="px-4 py-2 rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-blue-500"
             />
 
-            {/* only show create if user has permission */}
             {has("roles.create") ? (
               <button
                 onClick={openCreate}

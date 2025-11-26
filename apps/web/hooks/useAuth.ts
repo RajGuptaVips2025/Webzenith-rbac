@@ -4,9 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
 import { LoginInput, RegisterInput } from "../lib/schemas";
 
-//
-// 🔹 Get logged-in user (auto sync with Supabase)
-//
+
 export function useCurrentUser() {
   return useQuery({
     queryKey: ["auth", "user"],
@@ -18,9 +16,7 @@ export function useCurrentUser() {
   });
 }
 
-//
-// 🔹 Register new user
-//
+
 export function useSignUp() {
   const qc = useQueryClient();
 
@@ -46,9 +42,6 @@ export function useSignUp() {
   });
 }
 
-//
-// 🔹 Sign in user
-//
 export function useSignIn() {
   const qc = useQueryClient();
 
@@ -70,9 +63,7 @@ export function useSignIn() {
   });
 }
 
-//
-// 🔹 Logout
-//
+
 export function useSignOut() {
   const qc = useQueryClient();
 

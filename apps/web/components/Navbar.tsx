@@ -23,12 +23,10 @@ export default function Navbar() {
   return (
     <nav className="w-full bg-white border-b shadow-sm px-6 py-3 flex justify-between items-center sticky top-0 z-50">
 
-      {/* Logo */}
       <Link href="/" className="text-xl font-semibold tracking-tight text-blue-600">
         Webzenith Solutions
       </Link>
 
-      {/* Navigation Links */}
       <div className="hidden md:flex items-center gap-1">
         {links.map((link) => {
           const active = pathname.startsWith(link.href)
@@ -51,7 +49,6 @@ export default function Navbar() {
         })}
       </div>
 
-      {/* Right Side */}
       <div className="flex items-center gap-4">
         <LogoutButton />
       </div>

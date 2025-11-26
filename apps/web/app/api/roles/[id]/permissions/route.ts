@@ -1,7 +1,17 @@
+
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "../../../../../lib/supabase.server";
+import { createServerSupabaseClient, requirePermissionOrThrow } from "../../../../../lib/serverAuth";
 
 export async function POST(req: Request, ctx: { params: any }) {
+  const sb = await createServerSupabaseClient();
+
+  try {
+    await requirePermissionOrThrow(sb, "roles.update"); 
+  } catch (err) {
+    return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  }
+
   const params = typeof ctx.params?.then === "function" ? await ctx.params : ctx.params;
   const { id: roleId } = params ?? {};
   if (!roleId) return NextResponse.json({ error: "missing role id" }, { status: 400 });
@@ -39,6 +49,14 @@ export async function POST(req: Request, ctx: { params: any }) {
 }
 
 export async function DELETE(req: Request, ctx: { params: any }) {
+  const sb = await createServerSupabaseClient();
+
+  try {
+    await requirePermissionOrThrow(sb, "roles.update");
+  } catch (err) {
+    return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  }
+
   const params = typeof ctx.params?.then === "function" ? await ctx.params : ctx.params;
   const { id: roleId } = params ?? {};
   if (!roleId) return NextResponse.json({ error: "missing role id" }, { status: 400 });
@@ -60,3 +78,4 @@ export async function DELETE(req: Request, ctx: { params: any }) {
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
+

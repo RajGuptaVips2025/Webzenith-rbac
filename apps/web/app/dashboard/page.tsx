@@ -23,13 +23,11 @@ export default function UsersPerRolePage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        {/* EACH ROLE CARD */}
         {roles.map((role) => (
           <div
             key={role.roleId}
             className="bg-white p-6 rounded-2xl shadow border border-gray-200 hover:shadow-lg transition"
           >
-            {/* Role Header */}
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold">{role.roleName}</h2>
 
@@ -40,13 +38,10 @@ export default function UsersPerRolePage() {
               </span>
             </div>
 
-            {/* Role Description */}
             <p className="text-gray-600 text-sm">{role.description}</p>
 
-            {/* Divider */}
             <hr className="my-4" />
 
-            {/* Permissions Summary */}
             <div>
               <p className="text-xs text-gray-500 uppercase tracking-wide">
                 Total Permissions

@@ -1,21 +1,17 @@
-// apps/web/app/api/roles/[id]/route.ts
+
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "../../../../lib/supabase.server";
 
-// 1. Change the type definition for context
-// 2. Await context.params
 export async function PATCH(
   req: Request, 
   context: { params: Promise<{ id: string }> }
 ) {
-  // Await the params to extract the ID
   const { id } = await context.params;
 
   if (!id) return NextResponse.json({ error: "missing id" }, { status: 400 });
 
   const body = await req.json();
 
-  // Build updates object and remove undefined keys
   const possibleKeys = ["name", "description", "enabled", "color"] as const;
   const updates: Record<string, any> = {};
   for (const k of possibleKeys) {
@@ -47,7 +43,6 @@ export async function PATCH(
   }
 }
 
-// Ensure your DELETE handler in this file also awaits params if it exists
 export async function DELETE(
   req: Request, 
   context: { params: Promise<{ id: string }> }

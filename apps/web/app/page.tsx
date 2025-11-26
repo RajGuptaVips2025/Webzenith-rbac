@@ -1,4 +1,3 @@
-// apps/web/app/dashboard/page.tsx
 'use client';
 
 import React, { useEffect, useMemo, useState } from "react";
@@ -33,14 +32,12 @@ export default function DashboardPage() {
   const [rolesLoadError, setRolesLoadError] = useState<string | null>(null);
   const [usersLoadError, setUsersLoadError] = useState<string | null>(null);
 
-  // redirect to login if unauthenticated
   useEffect(() => {
     if (!userLoading && !supaUser) {
       router.replace("/login");
     }
   }, [userLoading, supaUser, router]);
 
-  // load app_user row and roles when we have supaUser
   useEffect(() => {
     if (userLoading || !supaUser) return;
 
@@ -51,7 +48,6 @@ export default function DashboardPage() {
 
     async function load() {
       try {
-        // fetch in parallel
         const [uRes, rRes] = await Promise.all([
           fetch("/api/users", { signal: ac.signal }),
           fetch("/api/roles/with-perms", { signal: ac.signal }),
@@ -65,7 +61,6 @@ export default function DashboardPage() {
 
         const users: AppUserRow[] = uJson.users ?? [];
 
-        // FIX: guarantee supaUser is defined
         const supaUserId = supaUser?.id;
         if (!supaUserId) return;
 
@@ -155,7 +150,6 @@ export default function DashboardPage() {
 
         <hr className="my-6" />
 
-        {/* Role card */}
         <div>
           <h2 className="text-lg font-semibold mb-3">Role & Permissions</h2>
 
@@ -222,7 +216,6 @@ export default function DashboardPage() {
 
         </div>
 
-        {/* Footer actions */}
         <div className="mt-6 flex items-center gap-3">
           <a href="/users" className="px-4 py-2 rounded-lg border hover:bg-gray-50">Manage users</a>
           <a href="/roles" className="px-4 py-2 rounded-lg border hover:bg-gray-50">Manage roles</a>

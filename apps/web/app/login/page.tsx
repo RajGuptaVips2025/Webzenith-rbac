@@ -13,10 +13,8 @@ export default function LoginPage() {
   const { mutateAsync, isPending, error } = useSignIn();
   const [showPassword, setShowPassword] = useState(false);
 
-  // DYNAMIC DEFAULT ROLE (UUID)
   const [defaultRole, setDefaultRole] = useState<string>("");
 
-  // Fetch roles dynamically from Supabase → /api/roles
   useEffect(() => {
     async function loadRoles() {
       const res = await fetch("/api/roles");
@@ -24,7 +22,6 @@ export default function LoginPage() {
 
       if (!json.roles || json.roles.length === 0) return;
 
-      // Auto-select default role (smart matching)
       const preferred =
         json.roles.find((r: any) =>
           r.name.toLowerCase().includes("sde")
@@ -35,7 +32,7 @@ export default function LoginPage() {
         json.roles.find((r: any) =>
           r.name.toLowerCase().includes("user")
         ) ||
-        json.roles[0]; // fallback to first role
+        json.roles[0]; 
 
       setDefaultRole(preferred.id);
     }
@@ -43,7 +40,6 @@ export default function LoginPage() {
     loadRoles();
   }, []);
 
-  // Form handling
   const {
     register,
     handleSubmit,
@@ -56,14 +52,12 @@ export default function LoginPage() {
     const result = await mutateAsync(data);
 
     if (result?.session) {
-      // Store Supabase auth cookies
       await fetch("/api/auth/set-cookie", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ session: result.session }),
       });
 
-      // Create missing app_user entry dynamically
       await fetch("/api/auth/create-app-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -71,7 +65,7 @@ export default function LoginPage() {
           id: result.session.user.id,
           name: result.session.user.user_metadata.full_name ?? "",
           email: result.session.user.email,
-          roleId: defaultRole, // THIS IS NOW DYNAMIC
+          roleId: defaultRole, 
         }),
       });
 
@@ -79,7 +73,6 @@ export default function LoginPage() {
     }
   }
 
-  // Wait until roles loaded
   if (!defaultRole) return (
     <div className="flex justify-center items-center h-screen text-lg">
       Loading...

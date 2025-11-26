@@ -1,4 +1,3 @@
-// apps/web/app/rbac/rbacContext.tsx
 "use client";
 
 import React, { createContext, useContext, useMemo } from "react";
@@ -7,7 +6,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface RBACContextType {
     state: RBACState;
-    addRole: (role: Partial<Role>) => Promise<Role>;   // ✅ FIXED
+    addRole: (role: Partial<Role>) => Promise<Role>;   
     updateRole: (id: string, updates: Partial<Role>) => Promise<void>;
     deleteRole: (id: string) => Promise<void>;
     assignPermission: (roleId: string, perm: Permission) => Promise<void>;
@@ -42,32 +41,27 @@ async function fetchUsers() {
 export function RBACProvider({ children }: { children: React.ReactNode }) {
     const qc = useQueryClient();
 
-    // query: permissions (table)
     const permsQuery = useQuery({
         queryKey: ["rbac", "permissions"],
         queryFn: fetchPermissions,
         staleTime: 1000 * 60 * 5,
     });
 
-    // query: roles with permissions
     const rolesQuery = useQuery({
         queryKey: ["rbac", "roles"],
         queryFn: fetchRolesWithPerms,
         staleTime: 1000 * 60 * 3,
     });
 
-    // query: app users
     const usersQuery = useQuery({
         queryKey: ["rbac", "users"],
         queryFn: fetchUsers,
         staleTime: 1000 * 60 * 3,
     });
 
-    // derived arrays
     const operations = useMemo(() => ["create", "read", "update", "delete"] as const, []);
     const permissions = permsQuery.data ?? [];
     const entities = useMemo(() => {
-        // derive unique entities from permissions if available; fallback to few defaults
         if (permissions.length) {
             const set = new Set<string>((permissions as any[]).map((p: any) => p.entity));
             return Array.from(set);
@@ -75,7 +69,6 @@ export function RBACProvider({ children }: { children: React.ReactNode }) {
         return ["users", "roles", "permissions", "projects", "tasks", "documents"];
     }, [permissions]);
 
-    // sensible client-side RBACState shape (keeps compatibility with existing components)
     const state: RBACState = {
         entities,
         operations: Array.from(operations),
@@ -84,7 +77,6 @@ export function RBACProvider({ children }: { children: React.ReactNode }) {
         users: usersQuery.data ?? [],
     };
 
-    // helper to call backend endpoints
     const postRole = useMutation({
         mutationFn: async (payload: Partial<Role>) => {
             const res = await fetch("/api/roles", {
@@ -109,7 +101,6 @@ export function RBACProvider({ children }: { children: React.ReactNode }) {
             const json = await res.json().catch(() => ({}));
 
             if (!res.ok) {
-                // prefer server-sent error message
                 const msg = (json && (json.error || json.message)) || `Failed to update role (${res.status})`;
                 throw new Error(msg);
             }
@@ -138,7 +129,6 @@ export function RBACProvider({ children }: { children: React.ReactNode }) {
 
             const json = await res.json().catch(() => ({}));
             if (!res.ok) {
-                // include server's message if available
                 const msg = (json && (json.error || json.message)) || `Failed to assign permission (${res.status})`;
                 throw new Error(msg);
             }
@@ -192,9 +182,7 @@ export function RBACProvider({ children }: { children: React.ReactNode }) {
     const ctx: RBACContextType = {
         state,
         addRole: async (role) => {
-            // return the server response so callers can use the real created role (with UUID)
             const res = await postRole.mutateAsync(role);
-            // server returns { role: {...} } — normalize to return the created role
             return (res && (res.role ?? res)) as Role;
         },
         updateRole: async (id, updates) => {

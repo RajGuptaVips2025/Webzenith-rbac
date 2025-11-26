@@ -10,30 +10,45 @@ import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 
 export default function RegisterPage() {
   const router = useRouter()
-  // const { mutateAsync } = useSignUp()
   const { mutateAsync, isPending, error } = useSignUp();
 
   const [roles, setRoles] = useState<any[]>([])
   const [defaultRole, setDefaultRole] = useState<string>("")
   const [showPassword, setShowPassword] = useState(false);
 
-  // ⬇ Load roles dynamically from backend
   useEffect(() => {
     async function loadRoles() {
-      const res = await fetch("/api/roles")
-      const json = await res.json()
+      const res = await fetch("/api/roles");
+      const json = await res.json();
 
-      setRoles(json.roles || [])
+      const roles = Array.isArray(json.roles) ? json.roles : (json?.roles ?? []);
 
-      // pick the default role
-      const defaultRole = json.roles?.find((r: any) =>
-        r.name.toLowerCase().includes("sde") ||
-        r.name.toLowerCase().includes("employee") ||
-        r.name.toLowerCase().includes("user")
-      ) ?? json.roles?.[0]
+      if (!roles.length) {
+        console.warn("No roles returned from /api/roles", json);
+        return;
+      }
 
-      setDefaultRole(defaultRole?.id)
+      const isHRName = (name: string | undefined) => {
+        if (!name) return false;
+        return /\bhr\b/i.test(name); 
+      };
+
+      const preferred =
+        roles.find((r: any) => isHRName(r.name)) ||
+        roles.find((r: any) => String(r.name || "").toLowerCase().includes("sde")) ||
+        roles.find((r: any) => String(r.name || "").toLowerCase().includes("employee")) ||
+        roles.find((r: any) => String(r.name || "").toLowerCase().includes("user")) ||
+        roles[0];
+
+      if (!preferred?.id) {
+        console.warn("Preferred role has no id — roles payload:", roles);
+        setDefaultRole(roles[0]?.id);
+        return;
+      }
+
+      setDefaultRole(preferred.id);
     }
+
 
     loadRoles()
   }, [])
@@ -52,7 +67,7 @@ export default function RegisterPage() {
           id: result.user.id,
           name: data.fullName,
           email: data.email,
-          roleId: defaultRole          // NOT HARDCODED
+          roleId: defaultRole          
         })
       })
     }
@@ -63,7 +78,7 @@ export default function RegisterPage() {
   if (!defaultRole) return <p>Loading roles...</p>
 
   return (
-     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl border border-gray-200">
 
         {/* HEADING */}
