@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useSignIn } from "../../hooks/useAuth";
 import { LoginInput, loginSchema } from "../../lib/schemas";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { waitForCookie } from "../../utils/waitForCookie";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -52,15 +53,24 @@ export default function LoginPage() {
     const result = await mutateAsync(data);
 
     if (result?.session) {
-      await fetch("/api/auth/set-cookie", {
+      // await fetch("/api/auth/set-cookie", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+        
+      //   body: JSON.stringify({ session: result.session }),
+      // });
+
+       await fetch("/api/auth/set-cookie", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
         body: JSON.stringify({ session: result.session }),
       });
 
       await fetch("/api/auth/create-app-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
         body: JSON.stringify({
           id: result.session.user.id,
           name: result.session.user.user_metadata.full_name ?? "",
@@ -68,6 +78,19 @@ export default function LoginPage() {
           roleId: defaultRole, 
         }),
       });
+
+      // await fetch("/api/auth/create-app-user", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({
+      //     id: result.session.user.id,
+      //     name: result.session.user.user_metadata.full_name ?? "",
+      //     email: result.session.user.email,
+      //     roleId: defaultRole, 
+      //   }),
+      // });
+
+      await waitForCookie("sb-access-token", 2000);
 
       router.replace("/");
     }

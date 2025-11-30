@@ -63,6 +63,7 @@ export default function RegisterPage() {
       await fetch("/api/auth/create-app-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
         body: JSON.stringify({
           id: result.user.id,
           name: data.fullName,

@@ -4,7 +4,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
 import { LoginInput, RegisterInput } from "../lib/schemas";
 
-
 export function useCurrentUser() {
   return useQuery({
     queryKey: ["auth", "user"],
